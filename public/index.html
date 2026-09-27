@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ViralPulse Agent | Autonomous Short-Form Viral Clip Finder</title>
+  <meta name="description" content="AI Agent to discover, scrape, and rank the most viral clips from YouTube Shorts, TikTok, and Instagram Reels with engagement velocity scoring.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dark-theme">
+  <!-- Glow Backdrops -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+  <div class="ambient-glow glow-3"></div>
+
+  <!-- Navigation Bar -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-group">
+        <div class="brand-icon">
+          <span class="icon-pulse"></span>
+          ⚡
+        </div>
+        <div class="brand-text">
+          <h1>Viral<span>Pulse</span> <span class="badge-agent">AGENT 2.0</span></h1>
+          <p>Autonomous Short-Form Viral Clip Intelligence & Scraper</p>
+        </div>
+      </div>
+      
+      <div class="header-actions">
+        <div class="agent-status-indicator" id="agentStatusBadge">
+          <span class="status-dot"></span>
+          <span class="status-label" id="agentStatusText">Agent Standby</span>
+        </div>
+        <div class="export-dropdown">
+          <button class="btn btn-secondary btn-sm" id="exportBtn" title="Export Results">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export Data
+          </button>
+          <div class="export-menu" id="exportMenu">
+            <a href="#" id="exportCsvBtn">📄 Download as CSV</a>
+            <a href="#" id="exportJsonBtn">📦 Download as JSON</a>
+          </div>
+        </div>
+        <button class="btn btn-secondary btn-sm" id="logoutBtn" title="Log Out">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Logout
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <!-- STEP 1: CATEGORY SELECTION -->
+    <section class="section-container" id="categorySection">
+      <div class="section-header">
+        <div class="step-badge">STEP 1</div>
+        <h2>Select Content Category</h2>
+        <p>Pick a niche to calibrate scraper queries, hashtags, and viral algorithmic benchmarks.</p>
+      </div>
+
+      <div class="categories-grid" id="categoriesGrid">
+        <!-- Rendered dynamically via JavaScript -->
+        <div class="loading-placeholder">Loading categories...</div>
+      </div>
+    </section>
+
+    <!-- STEP 2: SCRAPING CONFIGURATION -->
+    <section class="section-container" id="configSection">
+      <div class="section-header">
+        <div class="step-badge">STEP 2</div>
+        <h2>Configure Time Window & Platforms</h2>
+        <p>Define the viral timeframe, target social channels, and velocity scoring weights.</p>
+      </div>
+
+      <div class="config-card glass-panel">
+        <div class="config-row">
+          <!-- Time Range Picker -->
+          <div class="config-col">
+            <label class="config-label">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Selected Time Period
+            </label>
+            <div class="time-pills" id="timeRangeContainer">
+              <button type="button" class="time-pill" data-range="24h">
+                <span class="pill-title">24 Hours</span>
+                <span class="pill-desc">Breaking Spikes</span>
+              </button>
+              <button type="button" class="time-pill" data-range="3d">
+                <span class="pill-title">Past 3 Days</span>
+                <span class="pill-desc">Accelerating</span>
+              </button>
+              <button type="button" class="time-pill active" data-range="7d">
+                <span class="pill-title">Past 7 Days</span>
+                <span class="pill-desc">Weekly Winners</span>
+              </button>
+              <button type="button" class="time-pill" data-range="30d">
+                <span class="pill-title">Past 30 Days</span>
+                <span class="pill-desc">Monthly Titans</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Platforms Selection -->
+          <div class="config-col">
+            <label class="config-label">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+              Target Platforms
+            </label>
+            <div class="platform-checkboxes" id="platformsContainer">
+              <label class="platform-chip platform-yt active" data-platform="youtube_shorts">
+                <input type="checkbox" value="youtube_shorts" checked>
+                <span class="platform-icon">▶️</span>
+                <span class="platform-name">YouTube Shorts</span>
+                <span class="chip-status">Active</span>
+              </label>
+              <label class="platform-chip platform-tt active" data-platform="tiktok">
+                <input type="checkbox" value="tiktok" checked>
+                <span class="platform-icon">🎵</span>
+                <span class="platform-name">TikTok</span>
+                <span class="chip-status">Active</span>
+              </label>
+              <label class="platform-chip platform-ig active" data-platform="instagram_reels">
+                <input type="checkbox" value="instagram_reels" checked>
+                <span class="platform-icon">📸</span>
+                <span class="platform-name">Instagram Reels</span>
+                <span class="chip-status">Active</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Advanced Tuning Accordion -->
+        <div class="tuning-accordion">
+          <button type="button" class="tuning-toggle" id="tuningToggleBtn">
+            <span>⚙️ Custom Virality Velocity Weights (Advanced)</span>
+            <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          
+          <div class="tuning-content" id="tuningContent">
+            <div class="slider-grid">
+              <div class="slider-box">
+                <div class="slider-header">
+                  <span>View Velocity Weight (Views/Hr)</span>
+                  <span class="slider-value" id="valVelocity">1.0x</span>
+                </div>
+                <input type="range" id="weightVelocity" min="0.5" max="2.5" step="0.1" value="1.0">
+              </div>
+
+              <div class="slider-box">
+                <div class="slider-header">
+                  <span>Like Ratio Bonus</span>
+                  <span class="slider-value" id="valLikes">1.2x</span>
+                </div>
+                <input type="range" id="weightLikes" min="0.5" max="3.0" step="0.1" value="1.2">
+              </div>
+
+              <div class="slider-box">
+                <div class="slider-header">
+                  <span>Comment Ratio Intensity</span>
+                  <span class="slider-value" id="valComments">1.5x</span>
+                </div>
+                <input type="range" id="weightComments" min="0.5" max="3.0" step="0.1" value="1.5">
+              </div>
+
+              <div class="slider-box">
+                <div class="slider-header">
+                  <span>Share Multiplier Factor</span>
+                  <span class="slider-value" id="valShares">1.8x</span>
+                </div>
+                <input type="range" id="weightShares" min="0.5" max="3.0" step="0.1" value="1.8">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Launch Scraper Button -->
+        <div class="action-footer">
+          <div class="selected-summary">
+            Category: <strong id="summaryCategory">Tech & AI</strong> • Window: <strong id="summaryTime">Past 7 Days</strong>
+          </div>
+          <button class="btn btn-primary btn-glow" id="startScrapeBtn">
+            <span class="btn-icon">⚡</span>
+            <span>Launch Viral Agent Scraper</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIVE AGENT CONSOLE DRAWER -->
+    <section class="section-container" id="terminalSection" style="display: none;">
+      <div class="terminal-panel glass-panel">
+        <div class="terminal-header">
+          <div class="terminal-controls">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green"></span>
+            <span class="terminal-title">Agent Execution Stream // Live Crawler Logs</span>
+          </div>
+          <div class="terminal-progress-container">
+            <div class="terminal-progress-bar" id="terminalProgressBar" style="width: 0%;"></div>
+            <span class="progress-percent" id="terminalPercent">0%</span>
+          </div>
+        </div>
+        <div class="terminal-body" id="terminalLogs">
+          <div class="log-line system">[System] Agent ready for instruction.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 3: VIRAL CLIPS SHOWCASE -->
+    <section class="section-container" id="resultsSection" style="display: none;">
+      <div class="results-header">
+        <div>
+          <div class="step-badge">STEP 3</div>
+          <h2>Ranked Viral Clips Leaderboard</h2>
+          <p id="resultsSubtitle">Found 8 clips ranked by Engagement Velocity Score.</p>
+        </div>
+        <div class="results-view-controls">
+          <div class="filter-pills" id="platformFilterPills">
+            <button class="filter-pill active" data-filter="all">All</button>
+            <button class="filter-pill" data-filter="youtube_shorts">YouTube Shorts</button>
+            <button class="filter-pill" data-filter="tiktok">TikTok</button>
+            <button class="filter-pill" data-filter="instagram_reels">Reels</button>
+          </div>
+          <div class="view-switch">
+            <button class="view-btn active" id="viewGridBtn" title="Grid View">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            </button>
+            <button class="view-btn" id="viewTableBtn" title="Table View">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aggregate Analytics Metrics Banner -->
+      <div class="metrics-banner" id="metricsBanner">
+        <div class="metric-card">
+          <div class="metric-label">Scraped & Ranked</div>
+          <div class="metric-value" id="statTotalClips">0</div>
+          <div class="metric-sub">Across selected platforms</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Top Virality Score</div>
+          <div class="metric-value highlight" id="statTopScore">0.0</div>
+          <div class="metric-sub" id="statTopTier">Supernova Viral</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Peak Velocity</div>
+          <div class="metric-value" id="statPeakVelocity">0</div>
+          <div class="metric-sub">Views per hour</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Dominant Hook Type</div>
+          <div class="metric-value accent" id="statDominantHook">-</div>
+          <div class="metric-sub">Highest retention trigger</div>
+        </div>
+      </div>
+
+      <!-- Clips Grid View -->
+      <div class="clips-grid" id="clipsGrid">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Clips Table View -->
+      <div class="clips-table-container glass-panel" id="clipsTableContainer" style="display: none;">
+        <table class="clips-table">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Platform</th>
+              <th>Clip Details</th>
+              <th>Virality Score</th>
+              <th>Views & Velocity</th>
+              <th>Engagement</th>
+              <th>Hook Formula</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="clipsTableBody">
+            <!-- Rendered dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL: CLIP PREVIEW & AI BREAKDOWN -->
+  <div class="modal-backdrop" id="clipModal" style="display: none;">
+    <div class="modal-container glass-panel">
+      <button class="modal-close" id="modalCloseBtn">&times;</button>
+      
+      <div class="modal-content">
+        <!-- Video Player Section -->
+        <div class="modal-player-pane">
+          <div class="player-wrapper" id="playerWrapper">
+            <!-- Video or Iframe injected dynamically -->
+          </div>
+          <div class="player-meta-bar">
+            <span class="badge" id="modalPlatformBadge">YouTube Shorts</span>
+            <span class="badge" id="modalTierBadge">🔥 Supernova</span>
+            <span class="duration-badge" id="modalDuration">0:30</span>
+          </div>
+        </div>
+
+        <!-- Intelligence Breakdown Section -->
+        <div class="modal-info-pane">
+          <div class="modal-header-info">
+            <h3 id="modalTitle">Clip Title</h3>
+            <div class="creator-strip">
+              <span class="creator-avatar" id="modalAvatar">⚡</span>
+              <div>
+                <strong id="modalCreator">Creator Name</strong>
+                <span class="creator-handle" id="modalHandle">@handle</span>
+              </div>
+              <span class="time-ago-badge" id="modalTimeAgo">1 day ago</span>
+            </div>
+          </div>
+
+          <!-- Stats Matrix -->
+          <div class="modal-stats-matrix">
+            <div class="stat-box">
+              <span class="stat-num" id="modalViews">0</span>
+              <span class="stat-name">Total Views</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-num" id="modalViewsPerHour">0</span>
+              <span class="stat-name">Views / Hour</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-num" id="modalLikes">0</span>
+              <span class="stat-name">Likes</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-num" id="modalComments">0</span>
+              <span class="stat-name">Comments</span>
+            </div>
+          </div>
+
+          <!-- AI Virality Diagnostic -->
+          <div class="diagnostic-box">
+            <div class="diagnostic-title">
+              <span class="sparkle">✨</span>
+              AI Virality Diagnostic & Hook Breakdown
+            </div>
+            
+            <div class="diagnostic-field">
+              <div class="field-label">🪝 Hook Pattern Type</div>
+              <div class="field-value" id="modalHookType">Pattern Interrupt</div>
+            </div>
+
+            <div class="diagnostic-field">
+              <div class="field-label">🎯 Retention Driver (Why Viewers Stayed)</div>
+              <div class="field-value" id="modalRetention">Fast cut pacing with zero fluff.</div>
+            </div>
+
+            <div class="diagnostic-field">
+              <div class="field-label">🧠 Psychological Trigger</div>
+              <div class="field-value" id="modalTrigger">Curiosity Gap</div>
+            </div>
+
+            <div class="diagnostic-field">
+              <div class="field-label">🎵 Sound / Audio Trend</div>
+              <div class="field-value" id="modalAudio">Phonk Momentum Bassline</div>
+            </div>
+
+            <div class="diagnostic-field blueprint-field">
+              <div class="field-label">💡 Content Creator Blueprint</div>
+              <div class="field-value" id="modalBlueprint">Actionable replication steps.</div>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <a href="#" target="_blank" class="btn btn-primary" id="modalExternalLink">
+              <span>Open on Platform</span>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
+            <button class="btn btn-secondary" id="modalCopyBtn">
+              <span>Copy Clip Link</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <div class="footer-content">
+      <p>ViralPulse Agent • Autonomous Video Scraping & Viral Intelligence Suite</p>
+      <p class="footer-sub">Real-time YouTube Shorts engine powered by open-source yt-dlp & Social Velocity Scoring</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
