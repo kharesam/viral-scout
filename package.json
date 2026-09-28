@@ -43,6 +43,7 @@
         "lines": 70,
         "statements": 70
       }
-    }
+    },
+    "verbose": true
   }
 }
