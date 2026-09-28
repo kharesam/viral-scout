@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - Install dependencies: `npm install`
 - Run the server: `node server.js` (serves on `http://localhost:3000`, or `$PORT` if set)
-- No test suite, build step, or linter is configured (`npm test` is a stub that exits with an error).
+- No automated test suite yet — manual QA only; see the team wiki's "Viral Clips Agent QA checklist" before shipping changes.
 
 There is no watch/reload script — restart `node server.js` manually after changes to `server.js`, `scraperEngine.js`, or `categories.js`. Frontend files under `public/` are served statically, so browser refresh alone picks those up.
 
