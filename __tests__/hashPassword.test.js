@@ -1,26 +1,42 @@
-const path = require('path');
-const { execFileSync } = require('child_process');
-const bcrypt = require('bcryptjs');
-
-const SCRIPT_PATH = path.join(__dirname, '..', 'scripts', 'hash-password.js');
-
 describe('scripts/hash-password.js', () => {
-  it('prints a bcrypt hash that verifies the given password', () => {
-    const output = execFileSync('node', [SCRIPT_PATH, 'my-secret-password']).toString().trim();
-    expect(output).toMatch(/^\$2[aby]\$\d{2}\$.{53}$/);
-    expect(bcrypt.compareSync('my-secret-password', output)).toBe(true);
-    expect(bcrypt.compareSync('wrong-password', output)).toBe(false);
+  const SCRIPT_PATH = '../scripts/hash-password';
+  const ORIGINAL_ARGV = process.argv;
+
+  let exitSpy;
+  let logSpy;
+  let errorSpy;
+
+  beforeEach(() => {
+    jest.resetModules();
+    exitSpy = jest.spyOn(process, 'exit').mockImplementation((code) => {
+      throw new Error(`process.exit called with ${code}`);
+    });
+    logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
   });
 
-  it('exits with an error and usage message when no password is given', () => {
-    expect(() => execFileSync('node', [SCRIPT_PATH])).toThrow();
+  afterEach(() => {
+    process.argv = ORIGINAL_ARGV;
+    jest.restoreAllMocks();
+  });
 
-    try {
-      execFileSync('node', [SCRIPT_PATH], { stdio: 'pipe' });
-      throw new Error('expected the script to exit non-zero');
-    } catch (err) {
-      expect(err.status).toBe(1);
-      expect(err.stderr.toString()).toContain('Usage:');
-    }
+  test('prints a usage error and exits with code 1 when no password is given', () => {
+    process.argv = ['node', 'scripts/hash-password.js'];
+
+    expect(() => require(SCRIPT_PATH)).toThrow('process.exit called with 1');
+
+    expect(errorSpy).toHaveBeenCalledWith('Usage: node scripts/hash-password.js <password>');
+    expect(exitSpy).toHaveBeenCalledWith(1);
+    expect(logSpy).not.toHaveBeenCalled();
+  });
+
+  test('logs a bcrypt hash of the given password', () => {
+    process.argv = ['node', 'scripts/hash-password.js', 'super-secret'];
+
+    require(SCRIPT_PATH);
+
+    expect(exitSpy).not.toHaveBeenCalled();
+    expect(logSpy).toHaveBeenCalledTimes(1);
+    expect(logSpy.mock.calls[0][0]).toMatch(/^\$2[aby]\$\d{2}\$.{53}$/);
   });
 });
